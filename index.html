@@ -7,93 +7,108 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
-    <h1>VFR and IFR Airspace Mini-Course</h1>
-    <button id="theme-toggle" type="button">Switch to dark theme</button>
+  <header class="hero">
+    <div class="hero-top">
+      <p class="eyebrow">Mini-course</p>
+      <button id="theme-toggle" type="button">Switch to dark theme</button>
+    </div>
+    <h1>VFR and IFR Airspace</h1>
+    <p class="hero-sub">Learn how airspace classes, weather minima and special VFR work, then check yourself with a quick quiz after each lesson.</p>
+    <svg class="hero-plane" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+      <path d="M62 30 38 24 24 4h-6l6 20-14 3-6-6H0l4 11-4 11h4l6-6 14 3-6 20h6l14-20 24-6c3-1 3-4 0-4z"/>
+    </svg>
+    <div class="cloud cloud-1" aria-hidden="true"></div>
+    <div class="cloud cloud-2" aria-hidden="true"></div>
   </header>
 
+  <div class="progress" aria-live="polite">
+    <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
+    <p id="progress-text" class="progress-text">0 of 5 lessons complete</p>
+  </div>
+
   <nav id="lesson-nav" aria-label="Lessons">
-    <button type="button" data-target="lesson-1">1. Classes A to C</button>
-    <button type="button" data-target="lesson-2">2. Classes D to G</button>
-    <button type="button" data-target="lesson-3">3. Weather minima</button>
-    <button type="button" data-target="lesson-4">4. VFR flights</button>
-    <button type="button" data-target="lesson-5">5. Special VFR</button>
+    <button type="button" data-target="lesson-1"><span class="num">1</span> Classes A to C</button>
+    <button type="button" data-target="lesson-2"><span class="num">2</span> Classes D to G</button>
+    <button type="button" data-target="lesson-3"><span class="num">3</span> Weather minima</button>
+    <button type="button" data-target="lesson-4"><span class="num">4</span> VFR flights</button>
+    <button type="button" data-target="lesson-5"><span class="num">5</span> Special VFR</button>
   </nav>
 
   <main>
     <section id="lesson-1" class="lesson">
       <h2>Lesson 1: Airspace classes A to C</h2>
       <p>Airspace is split into classes, and the class tells you two things: which kinds of flight are allowed, and what air traffic control does to keep aircraft apart. Pilots fly either under Visual Flight Rules (VFR) or Instrument Flight Rules (IFR).</p>
-      <ul>
+      <ul class="cards">
         <li><strong>Class A</strong> is for IFR flights only. Air traffic control keeps every aircraft separated from every other aircraft and provides an Air Traffic Control Service.</li>
         <li><strong>Class B</strong> allows both IFR and VFR flights. Every aircraft is separated from every other, and Air Traffic Control Service is provided to all of them.</li>
         <li><strong>Class C</strong> allows both, but separation depends on the type of flight. IFR flights are separated from both IFR and VFR traffic. VFR flights are separated from IFR traffic only.</li>
       </ul>
       <p>In Class C, IFR flights receive Air Traffic Control Service. VFR flights receive that service for separation from IFR traffic, plus traffic information about other VFR flights, and advice on avoiding traffic if they ask for it.</p>
-      <div class="try-it">
-        <h3>Try it</h3>
-        <p>Imagine you are a VFR pilot. For each of classes A, B and C, write down whether you may fly there and who air traffic control will keep you apart from.</p>
-      </div>
+      <div class="quiz" data-lesson="lesson-1"></div>
     </section>
 
     <section id="lesson-2" class="lesson">
       <h2>Lesson 2: Airspace classes D to G</h2>
       <p>Control is strictest in classes A to C. As you move from D towards G, VFR flights lose their separation service, and the help on offer shifts from control to information.</p>
-      <ul>
+      <div class="scale" aria-hidden="true">
+        <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span>
+      </div>
+      <div class="scale-labels" aria-hidden="true"><span>More control</span><span>Less control</span></div>
+      <ul class="cards">
         <li><strong>Class D:</strong> IFR flights are separated from other IFR flights and receive Air Traffic Control Service, along with traffic information about VFR flights (and avoidance advice on request). VFR flights are not separated from anyone. They receive an information service covering IFR/IFR and VFR/VFR traffic, with avoidance advice on request.</li>
         <li><strong>Class E:</strong> IFR flights are separated from other IFR flights and receive Air Traffic Control Service plus traffic information about VFR flights. VFR flights get no separation, only traffic information.</li>
         <li><strong>Class F:</strong> IFR flights are separated from other IFR flights and receive an Air Traffic Advisory Service and a Flight Information Service. VFR flights get no separation, only the Flight Information Service.</li>
         <li><strong>Class G:</strong> Neither IFR nor VFR flights are separated. Both receive the Flight Information Service.</li>
       </ul>
-      <div class="try-it">
-        <h3>Try it</h3>
-        <p>Make a small table with classes D, E, F and G down the side and "VFR" and "IFR" across the top. In each cell, write whether separation is provided and which service the flight receives.</p>
+
+      <div class="lookup">
+        <h3>Class lookup</h3>
+        <p>Pick a class and a type of flight to see what you get in any of the classes A to G.</p>
+        <div class="lookup-row" role="group" aria-label="Airspace class" id="lookup-classes"></div>
+        <div class="lookup-row" role="group" aria-label="Type of flight" id="lookup-flights">
+          <button type="button" data-flight="VFR" aria-pressed="false">VFR</button>
+          <button type="button" data-flight="IFR" aria-pressed="false">IFR</button>
+        </div>
+        <div id="lookup-result" class="lookup-result" aria-live="polite">Choose a class and a type of flight.</div>
       </div>
+
+      <div class="quiz" data-lesson="lesson-2"></div>
     </section>
 
     <section id="lesson-3" class="lesson">
       <h2>Lesson 3: Weather minima for VFR</h2>
       <p>Visual Flight Rules mean flying with visual references to the ground and sky, which is only allowed in Visual Meteorological Conditions (VMC). Instrument Flight Rules mean flying only by reference to instruments. When visibility, distance from cloud or cloud ceiling is worse than the VMC minima, the conditions are called Instrument Meteorological Conditions (IMC).</p>
       <p>The minimum flight visibility and distance from cloud depend on your altitude and the airspace class:</p>
-      <ul>
+      <ul class="cards">
         <li><strong>At and above 10,000 ft AMSL</strong> (classes B, C, D, E, F and G): flight visibility of 8 km, at least 1,500 m horizontally and 300 m (1,000 ft) vertically from cloud.</li>
         <li><strong>Below 10,000 ft AMSL, and above 3,000 ft AMSL or 1,000 ft above terrain, whichever is higher</strong> (classes B, C, D, E, F and G): flight visibility of 5 km, with the same 1,500 m horizontal and 300 m (1,000 ft) vertical distance from cloud.</li>
         <li><strong>At and below 3,000 ft AMSL, or 1,000 ft above terrain, whichever is higher</strong>: flight visibility of 5 km. In classes B, C, D and E you must keep 1,500 m horizontally and 300 m (1,000 ft) vertically from cloud. In classes F and G you only need to stay clear of cloud with the surface in sight.</li>
       </ul>
-      <div class="try-it">
-        <h3>Try it</h3>
-        <p>Pick three situations (for example, 12,000 ft in Class C, 6,000 ft in Class G, and 2,000 ft in Class G). For each, write the minimum flight visibility and the required distance from cloud.</p>
-      </div>
+      <div class="quiz" data-lesson="lesson-3"></div>
     </section>
 
     <section id="lesson-4" class="lesson">
       <h2>Lesson 4: VFR flights at an aerodrome</h2>
       <p>VFR flights can operate at an aerodrome only in Visual Meteorological Conditions. That means the cloud ceiling is more than 1,500 ft, the ground visibility is more than 5 km, and it is between sunrise and sunset.</p>
       <p>When the weather drops below the VMC minima, VFR operations have to be suspended. Once VFR is suspended, take these steps:</p>
-      <ul>
+      <ul class="cards">
         <li>Hold all VFR departures.</li>
         <li>Recall all local flights operating under VFR, or obtain approval for special VFR operations.</li>
         <li>Notify the approach control unit or ACC, as appropriate, of the action taken.</li>
         <li>Notify all operators, or their designated representatives, of the reason for taking such action, if necessary or if they ask.</li>
       </ul>
-      <div class="try-it">
-        <h3>Try it</h3>
-        <p>The ceiling is 1,200 ft, ground visibility is 6 km, and it is midday. Can VFR continue? If not, list the steps you would take, in order.</p>
-      </div>
+      <div class="quiz" data-lesson="lesson-4"></div>
     </section>
 
     <section id="lesson-5" class="lesson">
       <h2>Lesson 5: Special VFR flights</h2>
       <p>A special VFR (SVFR) flight is cleared by air traffic control to operate within a control zone in weather conditions below VMC.</p>
       <p>It is only permitted if air traffic control approves the pilot's request, and only when two conditions are met:</p>
-      <ul>
+      <ul class="cards">
         <li>Ground visibility is not less than 1,500 m.</li>
         <li>Two-way communication is maintained.</li>
       </ul>
-      <div class="try-it">
-        <h3>Try it</h3>
-        <p>In your own words, explain the difference between a normal VFR flight and a special VFR flight. Then list the two conditions that must be met before special VFR is allowed.</p>
-      </div>
+      <div class="quiz" data-lesson="lesson-5"></div>
     </section>
   </main>
 
@@ -104,6 +119,7 @@
 
   <footer>
     <p>Mini-course on VFR and IFR airspace.</p>
+    <button id="reset-progress" type="button">Reset progress</button>
   </footer>
 
   <script src="script.js"></script>

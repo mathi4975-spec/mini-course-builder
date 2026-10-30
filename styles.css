@@ -1,59 +1,199 @@
 :root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --border: #bbbbbb;
+  --bg: #f4f9fd;
+  --surface: #ffffff;
+  --text: #14222e;
+  --muted: #4d6273;
+  --border: #c5d6e3;
   --accent: #0b5c85;
+  --accent-text: #ffffff;
+  --accent-soft: #dcecf7;
+  --good: #1e7a3c;
+  --good-soft: #dff3e5;
+  --bad: #b3261e;
+  --bad-soft: #fbe3e1;
+  --hero-from: #1f7fb8;
+  --hero-to: #8fd0f0;
 }
 
 :root[data-theme="dark"] {
-  --bg: #1a1a1a;
-  --text: #eeeeee;
-  --border: #555555;
+  --bg: #0e1620;
+  --surface: #17222f;
+  --text: #e8f0f6;
+  --muted: #9bb0c0;
+  --border: #31465a;
   --accent: #6cc4f0;
+  --accent-text: #0e1620;
+  --accent-soft: #1c3347;
+  --good: #6fd08c;
+  --good-soft: #17301f;
+  --bad: #ff8f87;
+  --bad-soft: #3a1c1a;
+  --hero-from: #0f3550;
+  --hero-to: #1d5f86;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0 auto;
-  padding: 0 1rem;
-  max-width: 45rem;
+  padding: 0 1rem 2rem;
+  max-width: 48rem;
   background: var(--bg);
   color: var(--text);
-  font-family: sans-serif;
-  line-height: 1.6;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.65;
 }
 
-header {
+h1, h2, h3 {
+  line-height: 1.25;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  margin: 0 -1rem;
+  padding: 1rem 1rem 2.5rem;
+  background: linear-gradient(160deg, var(--hero-from), var(--hero-to));
+  color: #ffffff;
+}
+
+.hero-top {
+  position: relative;
+  z-index: 2;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
 }
 
-h1 {
-  font-size: 1.5rem;
+.eyebrow {
+  margin: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.9;
 }
 
+.hero h1 {
+  position: relative;
+  z-index: 2;
+  margin: 1.5rem 0 0.5rem;
+  font-size: 2rem;
+}
+
+.hero-sub {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  max-width: 32rem;
+}
+
+.hero-plane {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.75rem;
+  width: 3rem;
+  height: 3rem;
+  fill: #ffffff;
+  z-index: 1;
+  animation: fly 6s ease-in-out infinite alternate;
+}
+
+.cloud {
+  position: absolute;
+  height: 1.5rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.cloud-1 {
+  top: 4.5rem;
+  right: 18%;
+  width: 6rem;
+}
+
+.cloud-2 {
+  bottom: 1.25rem;
+  right: 38%;
+  width: 4rem;
+}
+
+@keyframes fly {
+  from { transform: translate(0, 0) rotate(-8deg); }
+  to { transform: translate(-1rem, -0.75rem) rotate(-8deg); }
+}
+
+/* ---------- Buttons ---------- */
 button {
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 0.9rem;
   border: 1px solid var(--border);
-  background: var(--bg);
+  border-radius: 0.5rem;
+  background: var(--surface);
   color: var(--text);
   font: inherit;
   cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
 }
 
-button[aria-current="true"] {
+button:hover:not(:disabled) {
   border-color: var(--accent);
-  color: var(--accent);
-  font-weight: bold;
+  background: var(--accent-soft);
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
 }
 
 button:disabled {
-  opacity: 0.4;
+  opacity: 0.45;
   cursor: default;
 }
 
+.hero button {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.hero button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: #ffffff;
+}
+
+/* ---------- Progress ---------- */
+.progress {
+  margin: 1.25rem 0 0.5rem;
+}
+
+.progress-track {
+  height: 0.65rem;
+  border-radius: 0.5rem;
+  background: var(--accent-soft);
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 0;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ---------- Lesson menu ---------- */
 #lesson-nav,
 #lesson-controls {
   display: flex;
@@ -66,19 +206,227 @@ button:disabled {
   justify-content: space-between;
 }
 
-.try-it {
-  margin-top: 1.5rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--border);
+#lesson-nav button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.try-it h3 {
-  margin: 0.5rem 0 0;
+#lesson-nav .num {
+  display: inline-grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+#lesson-nav button[aria-current="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: bold;
+}
+
+#lesson-nav button[aria-current="true"] .num {
+  background: var(--accent-text);
+  color: var(--accent);
+}
+
+#lesson-nav button[data-done="true"] .num {
+  background: var(--good);
+  color: #ffffff;
+  font-size: 0;
+}
+
+#lesson-nav button[data-done="true"] .num::before {
+  content: "\2713";
+  font-size: 0.9rem;
+}
+
+/* ---------- Lessons ---------- */
+.lesson {
+  animation: fade-in 0.3s ease;
+}
+
+.lesson > h2 {
+  margin-top: 0.5rem;
+  color: var(--accent);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to { opacity: 1; transform: none; }
+}
+
+.cards {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cards li {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--accent);
+  border-radius: 0.5rem;
+  background: var(--surface);
+}
+
+/* Control scale on lesson 2 */
+.scale {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 1rem;
+}
+
+.scale span {
+  flex: 1;
+  padding: 0.4rem 0;
+  border-radius: 0.35rem;
+  text-align: center;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.scale span:nth-child(1) { background: #0b4468; }
+.scale span:nth-child(2) { background: #0f567f; }
+.scale span:nth-child(3) { background: #166a98; }
+.scale span:nth-child(4) { background: #2a82b1; }
+.scale span:nth-child(5) { background: #4a9bc6; color: #0e1620; }
+.scale span:nth-child(6) { background: #75b6d9; color: #0e1620; }
+.scale span:nth-child(7) { background: #a3d0e8; color: #0e1620; }
+
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* ---------- Class lookup ---------- */
+.lookup {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface);
+}
+
+.lookup h3 {
+  margin-top: 0;
+}
+
+.lookup-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.lookup-row button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: bold;
+}
+
+.lookup-result {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--accent-soft);
+}
+
+.lookup-result p {
+  margin: 0.25rem 0;
+}
+
+.lookup-result ul {
+  margin: 0.25rem 0;
+  padding-left: 1.25rem;
+}
+
+/* ---------- Quiz ---------- */
+.quiz {
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 2px solid var(--accent);
+  border-radius: 0.75rem;
+  background: var(--surface);
+}
+
+.quiz h3 {
+  margin: 0 0 0.5rem;
+}
+
+.question {
+  margin: 1rem 0;
+}
+
+.question p {
+  margin: 0 0 0.5rem;
+  font-weight: bold;
+}
+
+.options {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.options button {
+  text-align: left;
+}
+
+.options button:disabled {
+  opacity: 0.7;
+}
+
+.options button.correct,
+.options button.wrong {
+  opacity: 1;
+  color: var(--text);
+}
+
+.options button.correct {
+  border-color: var(--good);
+  background: var(--good-soft);
+}
+
+.options button.wrong {
+  border-color: var(--bad);
+  background: var(--bad-soft);
+}
+
+.feedback {
+  min-height: 1.5rem;
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+}
+
+.feedback.good { color: var(--good); }
+.feedback.bad { color: var(--bad); }
+
+.quiz-done {
+  margin: 1rem 0 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--good-soft);
+  color: var(--good);
+  font-weight: bold;
 }
 
 /* Without JavaScript, every lesson stays visible and the lesson buttons are hidden. */
 html:not(.js) #lesson-nav,
-html:not(.js) #lesson-controls {
+html:not(.js) #lesson-controls,
+html:not(.js) .progress,
+html:not(.js) .lookup,
+html:not(.js) #reset-progress {
   display: none;
 }
 
@@ -91,26 +439,80 @@ html.js .lesson.active {
 }
 
 footer {
-  margin: 2rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
   border-top: 1px solid var(--border);
   font-size: 0.9rem;
+  color: var(--muted);
 }
 
-/* Tablet and larger */
+footer p {
+  margin: 0;
+}
+
+/* ---------- Tablet and larger ---------- */
 @media (min-width: 600px) {
   body {
-    padding: 0 2rem;
+    padding: 0 2rem 2rem;
   }
 
-  h1 {
-    font-size: 1.75rem;
+  .hero {
+    margin: 0 -2rem;
+    padding: 1.25rem 2rem 3rem;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-plane {
+    width: 4.5rem;
+    height: 4.5rem;
+    right: 2rem;
+  }
+
+  .cards.two-up {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
-/* Phone: stack the lesson buttons full width so they are easy to tap */
+/* ---------- Phone ---------- */
 @media (max-width: 480px) {
-  #lesson-nav button,
+  .cloud {
+    display: none;
+  }
+
+  #lesson-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #lesson-nav button:last-child {
+    grid-column: 1 / -1;
+  }
+
   #lesson-controls button {
     flex: 1 1 100%;
+  }
+
+  .lookup-row button {
+    flex: 1 1 3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-plane,
+  .lesson {
+    animation: none;
+  }
+
+  .progress-fill,
+  button {
+    transition: none;
   }
 }
