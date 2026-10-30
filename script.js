@@ -1,5 +1,13 @@
 document.documentElement.classList.add('js');
 
+function setHash(hash) {
+  try {
+    history.replaceState(null, '', hash);
+  } catch (e) {
+    // Some browsers block this for local files; the page works without it.
+  }
+}
+
 var lessons = Array.prototype.slice.call(document.querySelectorAll('.lesson'));
 var navButtons = Array.prototype.slice.call(document.querySelectorAll('#lesson-nav button'));
 var prevButton = document.getElementById('prev-lesson');
@@ -57,7 +65,7 @@ function showTab(name) {
   });
   if (name !== 'lesson') {
     window.scrollTo(0, 0);
-    history.replaceState(null, '', '#' + name);
+    setHash('#' + name);
   }
 }
 
@@ -103,7 +111,7 @@ function showLesson(index) {
   nextButton.disabled = index === lessons.length - 1;
   showTab('lesson');
   window.scrollTo(0, 0);
-  history.replaceState(null, '', '#' + lessons[index].id);
+  setHash('#' + lessons[index].id);
 }
 
 navButtons.forEach(function (button, i) {
