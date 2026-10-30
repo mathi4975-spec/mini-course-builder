@@ -662,3 +662,64 @@ footer p {
 html:not(.js) .sim {
   display: none;
 }
+
+/* ---------- Tabs ---------- */
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 1rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.tabs button {
+  flex: 1;
+  margin-bottom: -2px;
+  padding: 0.6rem 0.75rem;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  border-radius: 0.5rem 0.5rem 0 0;
+  background: transparent;
+  font-weight: bold;
+}
+
+.tabs button[aria-selected="true"] {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+html:not(.js) .tabs {
+  display: none;
+}
+
+/* ---------- Quiz tab ---------- */
+.quiz-q {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface);
+}
+
+.score {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 2px solid var(--accent);
+  border-radius: 0.75rem;
+  background: var(--surface);
+  text-align: center;
+}
+
+.score[hidden] {
+  display: none;
+}
+
+.score-number {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--accent);
+}

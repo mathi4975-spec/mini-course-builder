@@ -1,9 +1,6 @@
 document.documentElement.classList.add('js');
 
 var lessons = Array.prototype.slice.call(document.querySelectorAll('.lesson'));
-var courseLessons = lessons.filter(function (lesson) {
-  return !lesson.classList.contains('extra');
-});
 var navButtons = Array.prototype.slice.call(document.querySelectorAll('#lesson-nav button'));
 var prevButton = document.getElementById('prev-lesson');
 var nextButton = document.getElementById('next-lesson');
@@ -36,9 +33,57 @@ function updateProgress() {
     button.setAttribute('data-done', done ? 'true' : 'false');
     button.setAttribute('aria-label', button.textContent.replace(/\s+/g, ' ').trim() + (done ? ' (completed)' : ''));
   });
-  progressFill.style.width = (completed.length / courseLessons.length * 100) + '%';
-  progressText.textContent = completed.length + ' of ' + courseLessons.length + ' lessons complete';
+  progressFill.style.width = (completed.length / lessons.length * 100) + '%';
+  progressText.textContent = completed.length + ' of ' + lessons.length + ' lessons complete';
 }
+
+/* ---------- Tabs ---------- */
+
+var tabButtons = Array.prototype.slice.call(document.querySelectorAll('.tabs [role="tab"]'));
+var panels = {
+  lesson: document.getElementById('panel-lesson'),
+  quiz: document.getElementById('panel-quiz'),
+  simulator: document.getElementById('panel-simulator')
+};
+
+function showTab(name) {
+  tabButtons.forEach(function (tab) {
+    var active = tab.getAttribute('data-tab') === name;
+    tab.setAttribute('aria-selected', active ? 'true' : 'false');
+    tab.tabIndex = active ? 0 : -1;
+  });
+  Object.keys(panels).forEach(function (key) {
+    panels[key].hidden = key !== name;
+  });
+  if (name !== 'lesson') {
+    window.scrollTo(0, 0);
+    history.replaceState(null, '', '#' + name);
+  }
+}
+
+tabButtons.forEach(function (tab, i) {
+  tab.addEventListener('click', function () {
+    var name = tab.getAttribute('data-tab');
+    if (name === 'lesson') {
+      showLesson(currentIndex);
+    } else {
+      showTab(name);
+    }
+  });
+  tab.addEventListener('keydown', function (event) {
+    var next = null;
+    if (event.key === 'ArrowRight') {
+      next = tabButtons[(i + 1) % tabButtons.length];
+    } else if (event.key === 'ArrowLeft') {
+      next = tabButtons[(i + tabButtons.length - 1) % tabButtons.length];
+    }
+    if (next) {
+      event.preventDefault();
+      next.focus();
+      next.click();
+    }
+  });
+});
 
 /* ---------- Switching lessons ---------- */
 
@@ -56,6 +101,7 @@ function showLesson(index) {
   });
   prevButton.disabled = index === 0;
   nextButton.disabled = index === lessons.length - 1;
+  showTab('lesson');
   window.scrollTo(0, 0);
   history.replaceState(null, '', '#' + lessons[index].id);
 }
@@ -175,21 +221,15 @@ function buildCheckIn(container) {
   continueButton.type = 'button';
   continueButton.className = 'continue';
   continueButton.hidden = true;
-  var nextLesson = lessons[lessonIndex + 1];
-  if (nextLesson && nextLesson.classList.contains('extra')) {
-    continueButton.textContent = 'Continue to the practice simulator';
-    continueButton.addEventListener('click', function () {
-      showLesson(lessonIndex + 1);
-    });
-  } else if (nextLesson) {
+  if (lessonIndex < lessons.length - 1) {
     continueButton.textContent = 'Continue to the next lesson';
     continueButton.addEventListener('click', function () {
       showLesson(lessonIndex + 1);
     });
   } else {
-    continueButton.textContent = 'Back to the first lesson';
+    continueButton.textContent = 'Continue to the quiz';
     continueButton.addEventListener('click', function () {
-      showLesson(0);
+      showTab('quiz');
     });
   }
 
@@ -470,6 +510,163 @@ Array.prototype.forEach.call(document.querySelectorAll('[data-preset]'), functio
 });
 updateSimulator();
 
+/* ---------- Quiz tab (eight questions across the whole course) ---------- */
+
+var finalQuiz = [
+  {
+    question: 'Which class of airspace allows IFR flights only?',
+    options: ['Class A', 'Class B', 'Class C'],
+    answer: 0,
+    explain: 'Class A is IFR only. Classes B and C allow both IFR and VFR.'
+  },
+  {
+    question: 'Which statement about Class B is correct?',
+    options: [
+      'Only IFR flights are allowed',
+      'Every aircraft is separated from every other aircraft',
+      'VFR flights receive no separation'
+    ],
+    answer: 1,
+    explain: 'In Class B, both IFR and VFR flights are allowed and all aircraft are separated, with Air Traffic Control Service provided.'
+  },
+  {
+    question: 'Which service do flights receive in Class G?',
+    options: ['Air Traffic Control Service', 'Air Traffic Advisory Service', 'Flight Information Service'],
+    answer: 2,
+    explain: 'Class G flights, IFR and VFR, receive the Flight Information Service.'
+  },
+  {
+    question: 'What do VFR flights receive in Class E?',
+    options: ['Air Traffic Control Service', 'Traffic information only', 'Air Traffic Advisory Service'],
+    answer: 1,
+    explain: 'In Class E, VFR flights get no separation, only traffic information.'
+  },
+  {
+    question: 'What is the minimum flight visibility below 10,000 ft AMSL and above 3,000 ft AMSL (or 1,000 ft above terrain, whichever is higher)?',
+    options: ['8 km', '5 km', '1.5 km'],
+    answer: 1,
+    explain: 'In this band you need 5 km of flight visibility. At and above 10,000 ft AMSL it is 8 km.'
+  },
+  {
+    question: 'At and below 3,000 ft AMSL in Class G, what is required about cloud?',
+    options: [
+      'Stay clear of cloud with the surface in sight',
+      'Stay 1,500 m horizontally and 300 m vertically from cloud',
+      'Stay at least 5 km from cloud'
+    ],
+    answer: 0,
+    explain: 'In classes F and G at this height you need to be clear of cloud with the surface in sight.'
+  },
+  {
+    question: 'Which set of conditions allows VFR to operate at an aerodrome?',
+    options: [
+      'Ceiling more than 1,000 ft, visibility more than 8 km, any time of day',
+      'Ceiling more than 3,000 ft, visibility more than 1.5 km, daytime only',
+      'Ceiling more than 1,500 ft, visibility more than 5 km, between sunrise and sunset'
+    ],
+    answer: 2,
+    explain: 'VFR needs a ceiling above 1,500 ft, ground visibility above 5 km, and daylight between sunrise and sunset.'
+  },
+  {
+    question: 'What is a special VFR flight?',
+    options: [
+      'A VFR flight that does not need air traffic control',
+      'A flight cleared by air traffic control to operate in a control zone in conditions below VMC',
+      'An IFR flight in good weather'
+    ],
+    answer: 1,
+    explain: 'A special VFR flight is cleared by air traffic control to operate within a control zone in conditions below VMC, if its request is approved.'
+  }
+];
+
+var quizList = document.getElementById('quiz-list');
+var quizScore = document.getElementById('quiz-score');
+var quizStatus = document.getElementById('quiz-status');
+
+function buildFinalQuiz() {
+  var answered = 0;
+  var correct = 0;
+  quizList.textContent = '';
+  quizScore.textContent = '';
+  quizScore.hidden = true;
+  quizStatus.textContent = '0 of ' + finalQuiz.length + ' answered';
+
+  finalQuiz.forEach(function (q, qi) {
+    var card = document.createElement('div');
+    card.className = 'quiz-q';
+
+    card.appendChild(simText('p', (qi + 1) + '. ' + q.question, 'question-text'));
+
+    var options = document.createElement('div');
+    options.className = 'options';
+
+    var feedback = document.createElement('p');
+    feedback.className = 'feedback';
+    feedback.setAttribute('aria-live', 'polite');
+
+    var buttons = q.options.map(function (label, oi) {
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = label;
+      button.addEventListener('click', function () {
+        buttons.forEach(function (b) {
+          b.disabled = true;
+        });
+        answered += 1;
+        if (oi === q.answer) {
+          correct += 1;
+          button.classList.add('correct');
+          feedback.className = 'feedback good';
+          feedback.textContent = 'Correct! ' + q.explain;
+        } else {
+          button.classList.add('wrong');
+          buttons[q.answer].classList.add('correct');
+          feedback.className = 'feedback bad';
+          feedback.textContent = 'Not quite. ' + q.explain;
+        }
+        quizStatus.textContent = answered + ' of ' + finalQuiz.length + ' answered';
+        if (answered === finalQuiz.length) {
+          showQuizScore(correct);
+        }
+      });
+      options.appendChild(button);
+      return button;
+    });
+
+    card.appendChild(options);
+    card.appendChild(feedback);
+    quizList.appendChild(card);
+  });
+}
+
+function showQuizScore(correct) {
+  var total = finalQuiz.length;
+  var message;
+  if (correct === total) {
+    message = 'Perfect score! You know this course well.';
+  } else if (correct >= total * 0.75) {
+    message = 'Well done. Review the questions you missed, then try again for a perfect score.';
+  } else {
+    message = 'Keep practising. Go back through the lessons and try the quiz again.';
+  }
+  quizScore.textContent = '';
+  quizScore.appendChild(simText('p', correct + ' out of ' + total, 'score-number'));
+  quizScore.appendChild(simText('p', message));
+
+  var retake = document.createElement('button');
+  retake.type = 'button';
+  retake.textContent = 'Retake the quiz';
+  retake.addEventListener('click', function () {
+    buildFinalQuiz();
+    window.scrollTo(0, 0);
+  });
+  quizScore.appendChild(retake);
+  quizScore.hidden = false;
+  quizScore.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+buildFinalQuiz();
+
 /* ---------- Reset and start-up ---------- */
 
 resetButton.addEventListener('click', function () {
@@ -480,11 +677,16 @@ resetButton.addEventListener('click', function () {
     container.textContent = '';
     buildCheckIn(container);
   });
+  buildFinalQuiz();
 });
 
 updateProgress();
 
+var startHash = window.location.hash;
 var startIndex = lessons.findIndex(function (lesson) {
-  return '#' + lesson.id === window.location.hash;
+  return '#' + lesson.id === startHash;
 });
 showLesson(startIndex === -1 ? 0 : startIndex);
+if (startHash === '#quiz' || startHash === '#simulator') {
+  showTab(startHash.slice(1));
+}

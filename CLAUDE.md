@@ -11,9 +11,9 @@
 /
 ├── CLAUDE.md    # this file
 ├── README.md
-├── index.html   # the whole course: one section per lesson
+├── index.html   # the whole page: Lesson, Quiz and Simulator tabs
 ├── styles.css   # aviation-inspired styling, light and dark theme colours
-└── script.js    # lesson switching, check-in questions, class lookup, weather simulator, progress, theme toggle
+└── script.js    # tabs, lesson switching, check-in questions, 8-question quiz, class lookup, weather simulator, progress, theme toggle
 ```
 
 The source slide deck is not stored in the repository.
@@ -37,18 +37,19 @@ A mini-course for students in a class, built once from a set of 3-5 slides. Stud
 
 ### Site structure
 
-One long scrolling page, top to bottom:
+One page, switched between three tabs with JavaScript (no separate pages):
 
 1. **Header**: course title and the light/dark theme toggle.
-2. **Intro**: who the course is for and what students will be able to do.
-3. **Lessons (3-5)**: one per slide. Each has a short explanation, key steps, and a "Try it" exercise.
-4. **Footer**: short wrap-up and next steps.
+2. **Lesson tab**: progress bar, a menu of the 5 lessons (one per slide), and a check-in question at the end of each.
+3. **Quiz tab**: 8 questions on the whole course, with right/wrong feedback per answer and a score at the end.
+4. **Simulator tab**: the aerodrome weather simulator.
+5. **Footer**: reset progress.
 
 ### How students move around
 
 - Scroll down through the lessons in order.
-- A menu at the top has links that jump to any lesson.
-- Each lesson ends with its "Try it" exercise before the next one starts.
+- Tabs at the top switch between Lesson, Quiz and Simulator.
+- In the Lesson tab, a menu jumps to any lesson, and each lesson ends with a check-in question before the next one starts.
 
 ### Phases
 
