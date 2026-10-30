@@ -13,7 +13,7 @@
 ├── README.md
 ├── index.html   # the whole course: one section per lesson
 ├── styles.css   # aviation-inspired styling, light and dark theme colours
-└── script.js    # lesson switching, quizzes, class lookup, progress, theme toggle
+└── script.js    # lesson switching, check-in questions, class lookup, progress, theme toggle
 ```
 
 The source slide deck is not stored in the repository.

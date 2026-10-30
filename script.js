@@ -94,91 +94,47 @@ try {
 }
 setTheme(savedTheme);
 
-/* ---------- Quizzes (answers come from the lesson content) ---------- */
+/* ---------- Check-in questions (one per lesson, answers come from the lesson content) ---------- */
 
-var quizzes = {
-  'lesson-1': [
-    {
-      question: 'Which class of airspace allows IFR flights only?',
-      options: ['Class A', 'Class B', 'Class C'],
-      answer: 0,
-      explain: 'Class A is IFR only. Classes B and C allow both IFR and VFR.'
-    },
-    {
-      question: 'In Class C, a VFR flight is separated from which traffic?',
-      options: ['All aircraft', 'IFR traffic only', 'No one'],
-      answer: 1,
-      explain: 'In Class C, VFR flights are separated from IFR traffic only.'
-    }
-  ],
-  'lesson-2': [
-    {
-      question: 'Which service do flights receive in Class G?',
-      options: ['Air Traffic Control Service', 'Air Traffic Advisory Service', 'Flight Information Service'],
-      answer: 2,
-      explain: 'Class G flights, IFR and VFR, receive the Flight Information Service.'
-    },
-    {
-      question: 'In which classes are VFR flights not separated from other traffic?',
-      options: ['Only F and G', 'D, E, F and G', 'Only G'],
-      answer: 1,
-      explain: 'VFR flights get no separation in classes D, E, F and G.'
-    }
-  ],
-  'lesson-3': [
-    {
-      question: 'What is the minimum flight visibility at and above 10,000 ft AMSL?',
-      options: ['5 km', '1.5 km', '8 km'],
-      answer: 2,
-      explain: 'At and above 10,000 ft AMSL you need 8 km of flight visibility.'
-    },
-    {
-      question: 'At and below 3,000 ft AMSL in Class G, what is required about cloud?',
-      options: [
-        'Stay clear of cloud with the surface in sight',
-        'Stay 1,500 m horizontally and 300 m vertically from cloud',
-        'Stay at least 5 km from cloud'
-      ],
-      answer: 0,
-      explain: 'In classes F and G at this height you need to be clear of cloud with the surface in sight.'
-    }
-  ],
-  'lesson-4': [
-    {
-      question: 'VFR can operate at an aerodrome when the cloud ceiling is more than:',
-      options: ['3,000 ft', '1,500 ft', '1,000 ft'],
-      answer: 1,
-      explain: 'The cloud ceiling must be more than 1,500 ft.'
-    },
-    {
-      question: 'Which of these is a step to take after VFR is suspended?',
-      options: [
-        'Let VFR departures carry on',
-        'Cancel all IFR flights',
-        'Hold all VFR departures'
-      ],
-      answer: 2,
-      explain: 'You hold all VFR departures, recall local VFR flights (or get special VFR approval), and notify the right units and operators.'
-    }
-  ],
-  'lesson-5': [
-    {
-      question: 'What is the minimum ground visibility for a special VFR flight?',
-      options: ['1,500 m', '5 km', '8 km'],
-      answer: 0,
-      explain: 'Ground visibility must not be less than 1,500 m.'
-    },
-    {
-      question: 'Which is a condition for special VFR?',
-      options: [
-        'The pilot does not need air traffic control approval',
-        'Two-way communication is maintained',
-        'Ground visibility is below 1,500 m'
-      ],
-      answer: 1,
-      explain: 'Air traffic control must approve the request, and two-way communication must be maintained.'
-    }
-  ]
+var checkIns = {
+  'lesson-1': {
+    question: 'In Class C, a VFR flight is separated from which traffic?',
+    options: ['All aircraft', 'IFR traffic only', 'No one'],
+    answer: 1,
+    explain: 'In Class C, VFR flights are separated from IFR traffic only.'
+  },
+  'lesson-2': {
+    question: 'In which classes are VFR flights not separated from other traffic?',
+    options: ['Only F and G', 'D, E, F and G', 'Only G'],
+    answer: 1,
+    explain: 'VFR flights get no separation in classes D, E, F and G.'
+  },
+  'lesson-3': {
+    question: 'What is the minimum flight visibility at and above 10,000 ft AMSL?',
+    options: ['5 km', '1.5 km', '8 km'],
+    answer: 2,
+    explain: 'At and above 10,000 ft AMSL you need 8 km of flight visibility.'
+  },
+  'lesson-4': {
+    question: 'Which of these is a step to take after VFR is suspended?',
+    options: [
+      'Let VFR departures carry on',
+      'Cancel all IFR flights',
+      'Hold all VFR departures'
+    ],
+    answer: 2,
+    explain: 'You hold all VFR departures, recall local VFR flights (or get special VFR approval), and notify the right units and operators.'
+  },
+  'lesson-5': {
+    question: 'What does a pilot need before flying special VFR in a control zone below VMC?',
+    options: [
+      'Nothing, the pilot decides alone',
+      'Air traffic control approval of the request',
+      'A cloud ceiling of more than 1,500 ft'
+    ],
+    answer: 1,
+    explain: 'Special VFR is only permitted if air traffic control approves the pilot\'s request (with ground visibility of at least 1,500 m and two-way communication).'
+  }
 };
 
 function markLessonComplete(lessonId) {
@@ -189,71 +145,76 @@ function markLessonComplete(lessonId) {
   updateProgress();
 }
 
-function buildQuiz(container) {
+function buildCheckIn(container) {
   var lessonId = container.getAttribute('data-lesson');
-  var questions = quizzes[lessonId];
-  var correctCount = 0;
+  var lessonIndex = lessons.findIndex(function (lesson) {
+    return lesson.id === lessonId;
+  });
+  var q = checkIns[lessonId];
 
   var heading = document.createElement('h3');
-  heading.textContent = 'Try it: quick quiz';
+  heading.textContent = 'Check-in';
   container.appendChild(heading);
 
-  var doneMessage = document.createElement('p');
-  doneMessage.className = 'quiz-done';
-  doneMessage.hidden = true;
-  doneMessage.textContent = 'Lesson complete. Nice work!';
+  var text = document.createElement('p');
+  text.className = 'question-text';
+  text.textContent = q.question;
+  container.appendChild(text);
 
-  questions.forEach(function (q, qi) {
-    var wrap = document.createElement('div');
-    wrap.className = 'question';
+  var options = document.createElement('div');
+  options.className = 'options';
 
-    var text = document.createElement('p');
-    text.textContent = (qi + 1) + '. ' + q.question;
-    wrap.appendChild(text);
+  var feedback = document.createElement('p');
+  feedback.className = 'feedback';
+  feedback.setAttribute('aria-live', 'polite');
 
-    var options = document.createElement('div');
-    options.className = 'options';
-
-    var feedback = document.createElement('p');
-    feedback.className = 'feedback';
-    feedback.setAttribute('aria-live', 'polite');
-
-    q.options.forEach(function (label, oi) {
-      var button = document.createElement('button');
-      button.type = 'button';
-      button.textContent = label;
-      button.addEventListener('click', function () {
-        if (oi === q.answer) {
-          button.classList.add('correct');
-          feedback.className = 'feedback good';
-          feedback.textContent = 'Correct! ' + q.explain;
-          Array.prototype.forEach.call(options.children, function (b) {
-            b.disabled = true;
-          });
-          correctCount += 1;
-          if (correctCount === questions.length) {
-            doneMessage.hidden = false;
-            markLessonComplete(lessonId);
-          }
-        } else {
-          button.classList.add('wrong');
-          button.disabled = true;
-          feedback.className = 'feedback bad';
-          feedback.textContent = 'Not quite. Have another go.';
-        }
-      });
-      options.appendChild(button);
+  var continueButton = document.createElement('button');
+  continueButton.type = 'button';
+  continueButton.className = 'continue';
+  continueButton.hidden = true;
+  if (lessonIndex < lessons.length - 1) {
+    continueButton.textContent = 'Continue to the next lesson';
+    continueButton.addEventListener('click', function () {
+      showLesson(lessonIndex + 1);
     });
+  } else {
+    continueButton.textContent = 'Back to the first lesson';
+    continueButton.addEventListener('click', function () {
+      showLesson(0);
+    });
+  }
 
-    wrap.appendChild(options);
-    wrap.appendChild(feedback);
-    container.appendChild(wrap);
+  var buttons = q.options.map(function (label, oi) {
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = label;
+    button.addEventListener('click', function () {
+      buttons.forEach(function (b) {
+        b.disabled = true;
+      });
+      if (oi === q.answer) {
+        button.classList.add('correct');
+        feedback.className = 'feedback good';
+        feedback.textContent = 'Correct! ' + q.explain;
+      } else {
+        button.classList.add('wrong');
+        buttons[q.answer].classList.add('correct');
+        feedback.className = 'feedback bad';
+        feedback.textContent = 'Not quite. ' + q.explain;
+      }
+      continueButton.hidden = false;
+      markLessonComplete(lessonId);
+    });
+    options.appendChild(button);
+    return button;
   });
 
-  container.appendChild(doneMessage);
+  container.appendChild(options);
+  container.appendChild(feedback);
+  container.appendChild(continueButton);
 }
 
-Array.prototype.forEach.call(document.querySelectorAll('.quiz'), buildQuiz);
+Array.prototype.forEach.call(document.querySelectorAll('.quiz'), buildCheckIn);
 
 /* ---------- Class lookup (lesson 2) ---------- */
 
@@ -387,7 +348,7 @@ resetButton.addEventListener('click', function () {
   updateProgress();
   Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (container) {
     container.textContent = '';
-    buildQuiz(container);
+    buildCheckIn(container);
   });
 });
 
