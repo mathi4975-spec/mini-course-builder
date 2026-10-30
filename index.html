@@ -32,6 +32,7 @@
     <button type="button" data-target="lesson-3"><span class="num">3</span> Weather minima</button>
     <button type="button" data-target="lesson-4"><span class="num">4</span> VFR flights</button>
     <button type="button" data-target="lesson-5"><span class="num">5</span> Special VFR</button>
+    <button type="button" data-target="simulator"><span class="num">&#9733;</span> Simulator</button>
   </nav>
 
   <main>
@@ -109,6 +110,46 @@
         <li>Two-way communication is maintained.</li>
       </ul>
       <div class="quiz" data-lesson="lesson-5"></div>
+    </section>
+
+    <section id="simulator" class="lesson extra">
+      <h2>Practice simulator: can VFR operate?</h2>
+      <p>Change the weather at an aerodrome and see whether VFR flights can operate, using the conditions from lesson 4 and the special VFR conditions from lesson 5. This section is extra practice and does not count towards your progress.</p>
+
+      <div class="sim">
+        <div class="presets" role="group" aria-label="Example scenarios">
+          <button type="button" data-preset="clear">Clear day</button>
+          <button type="button" data-preset="cloud">Low cloud</button>
+          <button type="button" data-preset="vis">Poor visibility</button>
+          <button type="button" data-preset="night">Night</button>
+          <button type="button" data-preset="marginal">Just below the minima</button>
+        </div>
+
+        <div id="sim-scene" class="sim-scene" aria-hidden="true">
+          <div id="sim-cloud" class="sim-cloud"></div>
+          <div class="sim-limit"><span>1,500 ft</span></div>
+          <div id="sim-haze" class="sim-haze"></div>
+          <div class="sim-ground"></div>
+        </div>
+
+        <div class="sim-controls">
+          <label for="sim-ceiling">Cloud ceiling: <output id="sim-ceiling-out"></output></label>
+          <input id="sim-ceiling" type="range" min="0" max="3000" step="100" value="2500">
+
+          <label for="sim-vis">Ground visibility: <output id="sim-vis-out"></output></label>
+          <input id="sim-vis" type="range" min="0" max="10" step="0.1" value="8">
+
+          <fieldset>
+            <legend>Time of day</legend>
+            <label><input type="radio" name="sim-time" value="day" checked> Between sunrise and sunset</label>
+            <label><input type="radio" name="sim-time" value="night"> Outside sunrise to sunset</label>
+          </fieldset>
+
+          <label class="check"><input id="sim-comms" type="checkbox" checked> Two-way communication with air traffic control is maintained</label>
+        </div>
+
+        <div id="sim-result" class="sim-result" aria-live="polite"></div>
+      </div>
     </section>
   </main>
 

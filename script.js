@@ -1,6 +1,9 @@
 document.documentElement.classList.add('js');
 
 var lessons = Array.prototype.slice.call(document.querySelectorAll('.lesson'));
+var courseLessons = lessons.filter(function (lesson) {
+  return !lesson.classList.contains('extra');
+});
 var navButtons = Array.prototype.slice.call(document.querySelectorAll('#lesson-nav button'));
 var prevButton = document.getElementById('prev-lesson');
 var nextButton = document.getElementById('next-lesson');
@@ -33,8 +36,8 @@ function updateProgress() {
     button.setAttribute('data-done', done ? 'true' : 'false');
     button.setAttribute('aria-label', button.textContent.replace(/\s+/g, ' ').trim() + (done ? ' (completed)' : ''));
   });
-  progressFill.style.width = (completed.length / lessons.length * 100) + '%';
-  progressText.textContent = completed.length + ' of ' + lessons.length + ' lessons complete';
+  progressFill.style.width = (completed.length / courseLessons.length * 100) + '%';
+  progressText.textContent = completed.length + ' of ' + courseLessons.length + ' lessons complete';
 }
 
 /* ---------- Switching lessons ---------- */
@@ -172,7 +175,13 @@ function buildCheckIn(container) {
   continueButton.type = 'button';
   continueButton.className = 'continue';
   continueButton.hidden = true;
-  if (lessonIndex < lessons.length - 1) {
+  var nextLesson = lessons[lessonIndex + 1];
+  if (nextLesson && nextLesson.classList.contains('extra')) {
+    continueButton.textContent = 'Continue to the practice simulator';
+    continueButton.addEventListener('click', function () {
+      showLesson(lessonIndex + 1);
+    });
+  } else if (nextLesson) {
     continueButton.textContent = 'Continue to the next lesson';
     continueButton.addEventListener('click', function () {
       showLesson(lessonIndex + 1);
@@ -339,6 +348,127 @@ Array.prototype.forEach.call(flightBox.querySelectorAll('button'), function (but
     showLookup();
   });
 });
+
+/* ---------- Aerodrome weather simulator ---------- */
+
+var simCeiling = document.getElementById('sim-ceiling');
+var simVis = document.getElementById('sim-vis');
+var simComms = document.getElementById('sim-comms');
+var simTimes = document.querySelectorAll('input[name="sim-time"]');
+var simResult = document.getElementById('sim-result');
+var simScene = document.getElementById('sim-scene');
+
+var simPresets = {
+  clear: { ceiling: 2500, vis: 8, time: 'day', comms: true },
+  cloud: { ceiling: 800, vis: 8, time: 'day', comms: true },
+  vis: { ceiling: 2500, vis: 3, time: 'day', comms: true },
+  night: { ceiling: 2500, vis: 8, time: 'night', comms: true },
+  marginal: { ceiling: 1500, vis: 5, time: 'day', comms: true }
+};
+
+var suspendSteps = [
+  'Hold all VFR departures.',
+  'Recall all local flights operating under VFR, or obtain approval for special VFR operations.',
+  'Notify the approach control unit or ACC, as appropriate, of the action taken.',
+  'Notify all operators, or their designated representatives, of the reason for taking such action, if necessary or if they ask.'
+];
+
+function simText(tag, text, className) {
+  var node = document.createElement(tag);
+  node.textContent = text;
+  if (className) {
+    node.className = className;
+  }
+  return node;
+}
+
+function simChecklist(items) {
+  var list = document.createElement('ul');
+  items.forEach(function (item) {
+    list.appendChild(simText('li', item.text, item.pass ? 'pass' : 'fail'));
+  });
+  return list;
+}
+
+function formatFeet(n) {
+  return n.toLocaleString('en-US') + ' ft';
+}
+
+function updateSimulator() {
+  var ceiling = Number(simCeiling.value);
+  var vis = Number(simVis.value);
+  var isDay = document.querySelector('input[name="sim-time"]:checked').value === 'day';
+
+  document.getElementById('sim-ceiling-out').textContent = formatFeet(ceiling);
+  document.getElementById('sim-vis-out').textContent = vis.toFixed(1) + ' km';
+
+  simScene.classList.toggle('night', !isDay);
+  document.getElementById('sim-cloud').style.bottom = (ceiling / 3000 * 80 + 10) + '%';
+  document.querySelector('.sim-limit').style.bottom = (1500 / 3000 * 80 + 10) + '%';
+  document.getElementById('sim-haze').style.opacity = (1 - Math.min(vis, 10) / 10) * 0.85;
+
+  var ceilingOk = ceiling > 1500;
+  var visOk = vis > 5;
+  var vfrOk = ceilingOk && visOk && isDay;
+
+  simResult.textContent = '';
+  simResult.appendChild(simText('p', vfrOk ? 'VFR can operate at the aerodrome' : 'VFR must be suspended', 'sim-status ' + (vfrOk ? 'ok' : 'bad')));
+
+  simResult.appendChild(simText('h3', 'Conditions for VFR'));
+  simResult.appendChild(simChecklist([
+    { pass: ceilingOk, text: 'Cloud ceiling more than 1,500 ft (now ' + formatFeet(ceiling) + ')' },
+    { pass: visOk, text: 'Ground visibility more than 5 km (now ' + vis.toFixed(1) + ' km)' },
+    { pass: isDay, text: 'Between sunrise and sunset (' + (isDay ? 'yes' : 'no') + ')' }
+  ]));
+
+  if (vfrOk) {
+    return;
+  }
+
+  simResult.appendChild(simText('h3', 'Steps to take now that VFR is suspended'));
+  var steps = document.createElement('ol');
+  suspendSteps.forEach(function (step) {
+    steps.appendChild(simText('li', step));
+  });
+  simResult.appendChild(steps);
+
+  var visSvfr = vis >= 1.5;
+  var commsOk = simComms.checked;
+  simResult.appendChild(simText('h3', 'Could special VFR be an option?'));
+  simResult.appendChild(simChecklist([
+    { pass: visSvfr, text: 'Ground visibility not less than 1,500 m (now ' + Math.round(vis * 1000).toLocaleString('en-US') + ' m)' },
+    { pass: commsOk, text: 'Two-way communication is maintained (' + (commsOk ? 'yes' : 'no') + ')' }
+  ]));
+  if (visSvfr && commsOk) {
+    simResult.appendChild(simText('p', 'Both conditions are met, so special VFR may be possible. It is only permitted if air traffic control approves the pilot\'s request.'));
+  } else {
+    simResult.appendChild(simText('p', 'Special VFR is not permitted while these conditions are not met.'));
+  }
+}
+
+function applySimPreset(name) {
+  var preset = simPresets[name];
+  simCeiling.value = preset.ceiling;
+  simVis.value = preset.vis;
+  simComms.checked = preset.comms;
+  Array.prototype.forEach.call(simTimes, function (radio) {
+    radio.checked = radio.value === preset.time;
+  });
+  updateSimulator();
+}
+
+[simCeiling, simVis, simComms].forEach(function (input) {
+  input.addEventListener('input', updateSimulator);
+});
+Array.prototype.forEach.call(simTimes, function (radio) {
+  radio.addEventListener('change', updateSimulator);
+});
+Array.prototype.forEach.call(document.querySelectorAll('[data-preset]'), function (button) {
+  button.addEventListener('click', function () {
+    applySimPreset(button.getAttribute('data-preset'));
+  });
+});
+updateSimulator();
 
 /* ---------- Reset and start-up ---------- */
 

@@ -492,10 +492,6 @@ footer p {
     grid-template-columns: 1fr 1fr;
   }
 
-  #lesson-nav button:last-child {
-    grid-column: 1 / -1;
-  }
-
   #lesson-controls button {
     flex: 1 1 100%;
   }
@@ -511,8 +507,158 @@ footer p {
     animation: none;
   }
 
+  .sim-scene,
+  .sim-cloud,
+  .sim-haze,
   .progress-fill,
   button {
     transition: none;
   }
+}
+
+/* ---------- Simulator ---------- */
+.sim {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface);
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.sim-scene {
+  position: relative;
+  height: 10rem;
+  margin: 1rem 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: linear-gradient(#5db4e6, #bfe6f8);
+  transition: background 0.3s;
+}
+
+.sim-scene.night {
+  background: linear-gradient(#0a1020, #1d2a4a);
+}
+
+.sim-cloud {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 83%;
+  height: 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 1rem;
+  transition: bottom 0.2s;
+}
+
+.sim-scene.night .sim-cloud {
+  background: rgba(200, 210, 230, 0.6);
+}
+
+.sim-limit {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 50%;
+  border-top: 2px dashed rgba(20, 34, 46, 0.7);
+}
+
+.sim-limit span {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.1rem;
+  font-size: 0.8rem;
+  color: #14222e;
+}
+
+.sim-scene.night .sim-limit {
+  border-top-color: rgba(255, 255, 255, 0.7);
+}
+
+.sim-scene.night .sim-limit span {
+  color: #ffffff;
+}
+
+.sim-haze {
+  position: absolute;
+  inset: 0;
+  background: #d8dde2;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.sim-ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1rem;
+  background: #3d7a46;
+}
+
+.sim-controls {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.sim-controls input[type="range"] {
+  width: 100%;
+}
+
+.sim-controls fieldset {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.5rem 0;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+}
+
+.sim-result {
+  margin-top: 1rem;
+}
+
+.sim-status {
+  margin: 0 0 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+}
+
+.sim-status.ok {
+  background: var(--good-soft);
+  color: var(--good);
+}
+
+.sim-status.bad {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+
+.sim-result h3 {
+  margin: 0.75rem 0 0.25rem;
+  font-size: 1rem;
+}
+
+.sim-result ul {
+  margin: 0.25rem 0;
+  padding-left: 1.25rem;
+}
+
+.sim-result li.pass::marker {
+  content: "\2713  ";
+  color: var(--good);
+}
+
+.sim-result li.fail::marker {
+  content: "\2717  ";
+  color: var(--bad);
+}
+
+html:not(.js) .sim {
+  display: none;
 }
