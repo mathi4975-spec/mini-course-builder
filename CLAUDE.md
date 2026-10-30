@@ -7,13 +7,16 @@
 
 ## Project Structure
 
-The repository is nearly empty for now:
-
 ```
 /
-├── CLAUDE.md   # this file
-└── README.md
+├── CLAUDE.md    # this file
+├── README.md
+├── index.html   # the whole course: one section per lesson
+├── styles.css   # plain styling, light and dark theme colours
+└── script.js    # switches lessons (no page reloads) and the theme toggle
 ```
+
+The source slide deck is not stored in the repository.
 
 Update this section as files and folders are added.
 

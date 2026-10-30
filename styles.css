@@ -1,0 +1,116 @@
+:root {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --border: #bbbbbb;
+  --accent: #0b5c85;
+}
+
+:root[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --text: #eeeeee;
+  --border: #555555;
+  --accent: #6cc4f0;
+}
+
+body {
+  margin: 0 auto;
+  padding: 0 1rem;
+  max-width: 45rem;
+  background: var(--bg);
+  color: var(--text);
+  font-family: sans-serif;
+  line-height: 1.6;
+}
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+button {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+button[aria-current="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: bold;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+#lesson-nav,
+#lesson-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+#lesson-controls {
+  justify-content: space-between;
+}
+
+.try-it {
+  margin-top: 1.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+}
+
+.try-it h3 {
+  margin: 0.5rem 0 0;
+}
+
+/* Without JavaScript, every lesson stays visible and the lesson buttons are hidden. */
+html:not(.js) #lesson-nav,
+html:not(.js) #lesson-controls {
+  display: none;
+}
+
+html.js .lesson {
+  display: none;
+}
+
+html.js .lesson.active {
+  display: block;
+}
+
+footer {
+  margin: 2rem 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+/* Tablet and larger */
+@media (min-width: 600px) {
+  body {
+    padding: 0 2rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+}
+
+/* Phone: stack the lesson buttons full width so they are easy to tap */
+@media (max-width: 480px) {
+  #lesson-nav button,
+  #lesson-controls button {
+    flex: 1 1 100%;
+  }
+}

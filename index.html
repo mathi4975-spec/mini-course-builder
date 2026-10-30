@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VFR and IFR Airspace Mini-Course</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>VFR and IFR Airspace Mini-Course</h1>
+    <button id="theme-toggle" type="button">Switch to dark theme</button>
+  </header>
+
+  <nav id="lesson-nav" aria-label="Lessons">
+    <button type="button" data-target="lesson-1">1. Classes A to C</button>
+    <button type="button" data-target="lesson-2">2. Classes D to G</button>
+    <button type="button" data-target="lesson-3">3. Weather minima</button>
+    <button type="button" data-target="lesson-4">4. VFR flights</button>
+    <button type="button" data-target="lesson-5">5. Special VFR</button>
+  </nav>
+
+  <main>
+    <section id="lesson-1" class="lesson">
+      <h2>Lesson 1: Airspace classes A to C</h2>
+      <p>Airspace is split into classes, and the class tells you two things: which kinds of flight are allowed, and what air traffic control does to keep aircraft apart. Pilots fly either under Visual Flight Rules (VFR) or Instrument Flight Rules (IFR).</p>
+      <ul>
+        <li><strong>Class A</strong> is for IFR flights only. Air traffic control keeps every aircraft separated from every other aircraft and provides an Air Traffic Control Service.</li>
+        <li><strong>Class B</strong> allows both IFR and VFR flights. Every aircraft is separated from every other, and Air Traffic Control Service is provided to all of them.</li>
+        <li><strong>Class C</strong> allows both, but separation depends on the type of flight. IFR flights are separated from both IFR and VFR traffic. VFR flights are separated from IFR traffic only.</li>
+      </ul>
+      <p>In Class C, IFR flights receive Air Traffic Control Service. VFR flights receive that service for separation from IFR traffic, plus traffic information about other VFR flights, and advice on avoiding traffic if they ask for it.</p>
+      <div class="try-it">
+        <h3>Try it</h3>
+        <p>Imagine you are a VFR pilot. For each of classes A, B and C, write down whether you may fly there and who air traffic control will keep you apart from.</p>
+      </div>
+    </section>
+
+    <section id="lesson-2" class="lesson">
+      <h2>Lesson 2: Airspace classes D to G</h2>
+      <p>Control is strictest in classes A to C. As you move from D towards G, VFR flights lose their separation service, and the help on offer shifts from control to information.</p>
+      <ul>
+        <li><strong>Class D:</strong> IFR flights are separated from other IFR flights and receive Air Traffic Control Service, along with traffic information about VFR flights (and avoidance advice on request). VFR flights are not separated from anyone. They receive an information service covering IFR/IFR and VFR/VFR traffic, with avoidance advice on request.</li>
+        <li><strong>Class E:</strong> IFR flights are separated from other IFR flights and receive Air Traffic Control Service plus traffic information about VFR flights. VFR flights get no separation, only traffic information.</li>
+        <li><strong>Class F:</strong> IFR flights are separated from other IFR flights and receive an Air Traffic Advisory Service and a Flight Information Service. VFR flights get no separation, only the Flight Information Service.</li>
+        <li><strong>Class G:</strong> Neither IFR nor VFR flights are separated. Both receive the Flight Information Service.</li>
+      </ul>
+      <div class="try-it">
+        <h3>Try it</h3>
+        <p>Make a small table with classes D, E, F and G down the side and "VFR" and "IFR" across the top. In each cell, write whether separation is provided and which service the flight receives.</p>
+      </div>
+    </section>
+
+    <section id="lesson-3" class="lesson">
+      <h2>Lesson 3: Weather minima for VFR</h2>
+      <p>Visual Flight Rules mean flying with visual references to the ground and sky, which is only allowed in Visual Meteorological Conditions (VMC). Instrument Flight Rules mean flying only by reference to instruments. When visibility, distance from cloud or cloud ceiling is worse than the VMC minima, the conditions are called Instrument Meteorological Conditions (IMC).</p>
+      <p>The minimum flight visibility and distance from cloud depend on your altitude and the airspace class:</p>
+      <ul>
+        <li><strong>At and above 10,000 ft AMSL</strong> (classes B, C, D, E, F and G): flight visibility of 8 km, at least 1,500 m horizontally and 300 m (1,000 ft) vertically from cloud.</li>
+        <li><strong>Below 10,000 ft AMSL, and above 3,000 ft AMSL or 1,000 ft above terrain, whichever is higher</strong> (classes B, C, D, E, F and G): flight visibility of 5 km, with the same 1,500 m horizontal and 300 m (1,000 ft) vertical distance from cloud.</li>
+        <li><strong>At and below 3,000 ft AMSL, or 1,000 ft above terrain, whichever is higher</strong>: flight visibility of 5 km. In classes B, C, D and E you must keep 1,500 m horizontally and 300 m (1,000 ft) vertically from cloud. In classes F and G you only need to stay clear of cloud with the surface in sight.</li>
+      </ul>
+      <div class="try-it">
+        <h3>Try it</h3>
+        <p>Pick three situations (for example, 12,000 ft in Class C, 6,000 ft in Class G, and 2,000 ft in Class G). For each, write the minimum flight visibility and the required distance from cloud.</p>
+      </div>
+    </section>
+
+    <section id="lesson-4" class="lesson">
+      <h2>Lesson 4: VFR flights at an aerodrome</h2>
+      <p>VFR flights can operate at an aerodrome only in Visual Meteorological Conditions. That means the cloud ceiling is more than 1,500 ft, the ground visibility is more than 5 km, and it is between sunrise and sunset.</p>
+      <p>When the weather drops below the VMC minima, VFR operations have to be suspended. Once VFR is suspended, take these steps:</p>
+      <ul>
+        <li>Hold all VFR departures.</li>
+        <li>Recall all local flights operating under VFR, or obtain approval for special VFR operations.</li>
+        <li>Notify the approach control unit or ACC, as appropriate, of the action taken.</li>
+        <li>Notify all operators, or their designated representatives, of the reason for taking such action, if necessary or if they ask.</li>
+      </ul>
+      <div class="try-it">
+        <h3>Try it</h3>
+        <p>The ceiling is 1,200 ft, ground visibility is 6 km, and it is midday. Can VFR continue? If not, list the steps you would take, in order.</p>
+      </div>
+    </section>
+
+    <section id="lesson-5" class="lesson">
+      <h2>Lesson 5: Special VFR flights</h2>
+      <p>A special VFR (SVFR) flight is cleared by air traffic control to operate within a control zone in weather conditions below VMC.</p>
+      <p>It is only permitted if air traffic control approves the pilot's request, and only when two conditions are met:</p>
+      <ul>
+        <li>Ground visibility is not less than 1,500 m.</li>
+        <li>Two-way communication is maintained.</li>
+      </ul>
+      <div class="try-it">
+        <h3>Try it</h3>
+        <p>In your own words, explain the difference between a normal VFR flight and a special VFR flight. Then list the two conditions that must be met before special VFR is allowed.</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="lesson-controls">
+    <button id="prev-lesson" type="button">Previous lesson</button>
+    <button id="next-lesson" type="button">Next lesson</button>
+  </div>
+
+  <footer>
+    <p>Mini-course on VFR and IFR airspace.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
